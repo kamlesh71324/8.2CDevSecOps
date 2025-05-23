@@ -22,25 +22,21 @@ pipeline {
     }
 
     post {
-        always {
-            emailext (
-                subject: "${env.JOB_NAME} - Build #${env.BUILD_NUMBER} - ${currentBuild.currentResult}",
-                body: """
-                Hello Kamlesh,
-
-                Your Jenkins build has finished.
-
-                Job: ${env.JOB_NAME}
-                Build Number: ${env.BUILD_NUMBER}
-                Status: ${currentBuild.currentResult}
-
-                View the full build log here: ${env.BUILD_URL}
-
-                Thanks,
-                Jenkins
-                """,
-                to: 'kamlesh71324@gmail.com'
-            )
-        }
+    always {
+        emailext (
+            subject: "${env.JOB_NAME} - Build #${env.BUILD_NUMBER} - ${currentBuild.currentResult}",
+            body: """
+            Hello Kamlesh,
+            Your Jenkins build has finished.
+            Job: ${env.JOB_NAME}
+            Build Number: ${env.BUILD_NUMBER}
+            Status: ${currentBuild.currentResult}
+            View the full build log here: ${env.BUILD_URL}
+            Thanks,
+            Jenkins
+            """,
+            to: 'kamlesh71324@gmail.com'
+        )
     }
+}
 }
