@@ -1,35 +1,46 @@
 pipeline {
-  agent any
+    agent any
 
-  stages {
-    stage('Checkout') {
-      steps {
-        git branch: 'main', url: 'https://github.com/kamlesh71324/8.2CDevSecOps.git'
-      }
+    stages {
+        stage('Install Dependencies') {
+            steps {
+                sh 'npm install'
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                sh 'npm test || true'
+            }
+        }
+
+        stage('Security Scan') {
+            steps {
+                sh 'npm audit || true'
+            }
+        }
     }
 
-    stage('Install Dependencies') {
-      steps {
-        sh 'npm install'
-      }
-    }
+    post {
+        always {
+            emailext (
+                subject: "${env.JOB_NAME} - Build #${env.BUILD_NUMBER} - ${currentBuild.currentResult}",
+                body: """
+                Hello Kamlesh,
 
-    stage('Run Tests') {
-      steps {
-        sh 'npm test || true'
-      }
-    }
+                Your Jenkins build has finished.
 
-    stage('Generate Coverage Report') {
-      steps {
-        sh 'npm run coverage || true'
-      }
-    }
+                Job: ${env.JOB_NAME}
+                Build Number: ${env.BUILD_NUMBER}
+                Status: ${currentBuild.currentResult}
 
-    stage('NPM Audit (Security Scan)') {
-      steps {
-        sh 'npm audit || true'
-      }
+                View the full build log here: ${env.BUILD_URL}
+
+                Thanks,
+                Jenkins
+                """,
+                to: 'kamlesh71324@gmail.com'
+            )
+        }
     }
-  }
 }
