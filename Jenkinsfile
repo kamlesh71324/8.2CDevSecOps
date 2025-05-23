@@ -21,6 +21,8 @@ pipeline {
         }
     }
 
+    // Trigger build test
+
     post {
     always {
         mail to: 'kamlesh71324@gmail.com',
