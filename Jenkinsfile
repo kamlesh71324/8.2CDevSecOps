@@ -22,7 +22,7 @@ pipeline {
     }
 
     // Trigger build test
-// Trigger build test2
+// Trigger build test222
     post {
     always {
         mail to: 'kamlesh71324@gmail.com',
