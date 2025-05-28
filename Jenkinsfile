@@ -21,12 +21,12 @@ pipeline {
         }
     }
 
-
     post {
-    always {
-        mail to: 'kamlesh71324@gmail.com',
-             subject: "${env.JOB_NAME} - Build #${env.BUILD_NUMBER} - ${currentBuild.currentResult}",
-             body: """Hello Kamlesh,
+        always {
+            emailext (
+                to: 'kamlesh71324@gmail.com',
+                subject: "${env.JOB_NAME} - Build #${env.BUILD_NUMBER} - ${currentBuild.currentResult}",
+                body: """Hello Kamlesh,
 
 Your Jenkins build has finished.
 
@@ -34,10 +34,13 @@ Job: ${env.JOB_NAME}
 Build Number: ${env.BUILD_NUMBER}
 Status: ${currentBuild.currentResult}
 
-View the full build log here: ${env.BUILD_URL}
+See the attached build log for details.
 
 Thanks,
-Jenkins"""
+Jenkins
+""",
+                attachLog: true
+            )
+        }
     }
-}
 }
