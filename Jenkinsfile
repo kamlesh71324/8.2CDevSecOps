@@ -1,13 +1,6 @@
 pipeline {
     agent any
     
-    environment {
-        DIRECTORY_PATH = "/var/jenkins_home"
-        TESTING_ENVIRONMENT = "TASK_6.1C"
-        PRODUCTION_ENVIRONMENT = "Akashdeep Singh Sidhu"
-        EMAIL_RECIPIENT = "kamlesh71324@gmail.com"
-    }
-    
     stages {
         stage('Build') {
             steps {
