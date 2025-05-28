@@ -10,37 +10,53 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                sh 'npm test || true'
+                sh 'npm test || true' // Allow test failures without breaking pipeline
             }
         }
 
         stage('Security Scan') {
             steps {
-                sh 'npm audit || true'
+                sh 'npm audit || true' // Allow audit warnings without breaking pipeline
             }
         }
     }
 
     post {
-        always {
-            emailext(
-                to: 'kamlesh71324@gmail.com',
-                subject: "${env.JOB_NAME} - Build #${env.BUILD_NUMBER} - ${currentBuild.currentResult}",
-                body: """Hello Kamlesh,
+        success {
+            echo "✅ About to send success email using mail step"
+            mail to: 'kamlesh71324@gmail.com',
+                 subject: "${env.JOB_NAME} - Build #${env.BUILD_NUMBER} - SUCCESS",
+                 body: """Hello Kamlesh,
 
-Your Jenkins build has finished.
+✅ Your Jenkins build completed successfully.
 
-Job: ${env.JOB_NAME}
-Build Number: ${env.BUILD_NUMBER}
-Status: ${currentBuild.currentResult}
+🔧 Job: ${env.JOB_NAME}
+🔢 Build Number: ${env.BUILD_NUMBER}
+📄 View the full build log: ${env.BUILD_URL}
 
-View the full build log here: ${env.BUILD_URL}
+Regards,  
+Jenkins
+"""
+        }
 
-Thanks,
-Jenkins""",
-                attachLog: true
-            )
+        failure {
+            echo "❌ About to send failure email using mail step"
+            mail to: 'kamlesh71324@gmail.com',
+                 subject: "${env.JOB_NAME} - Build #${env.BUILD_NUMBER} - FAILURE",
+                 body: """Hello Kamlesh,
+
+❌ Your Jenkins build has failed.
+
+🔧 Job: ${env.JOB_NAME}
+🔢 Build Number: ${env.BUILD_NUMBER}
+📄 View the full build log: ${env.BUILD_URL}
+
+Please review and fix the issue.
+
+Regards,  
+Jenkins
+"""
         }
     }
-}
+
 
