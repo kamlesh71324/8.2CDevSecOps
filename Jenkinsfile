@@ -23,22 +23,23 @@ pipeline {
 
     post {
         always {
-            emailext (
+            emailext(
                 to: 'kamlesh71324@gmail.com',
                 subject: "${env.JOB_NAME} - Build #${env.BUILD_NUMBER} - ${currentBuild.currentResult}",
-                body: """Hello Kamlesh,
+                body: """
+Hello Kamlesh,
 
-Your Jenkins build has finished.
+Your Jenkins build has completed.
 
 Job: ${env.JOB_NAME}
 Build Number: ${env.BUILD_NUMBER}
 Status: ${currentBuild.currentResult}
 
-See the attached build log for details.
+You can also view the build log here: ${env.BUILD_URL}
 
 Thanks,
 Jenkins
-""",
+                """,
                 attachLog: true
             )
         }
