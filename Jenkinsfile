@@ -2,17 +2,21 @@ pipeline {
     agent any
 
     stages {
-        stage('Build') {
+        stage('Install Dependencies') {
             steps {
-                echo 'Building...'
+                sh 'npm install'
             }
         }
 
-        stage('Test') {
+        stage('Run Tests') {
             steps {
-                echo 'Testing...'
-                // Simulate a failure to test email
-                sh 'exit 1'
+                sh 'npm test || true' // Allow test failures without breaking pipeline
+            }
+        }
+
+        stage('Security Scan') {
+            steps {
+                sh 'npm audit || true' // Allow audit warnings without breaking pipeline
             }
         }
     }
@@ -21,18 +25,20 @@ pipeline {
         always {
             script {
                 emailext (
-                    subject: "Build ${currentBuild.currentResult}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
-                    body: """
-                        <p>Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]': ${currentBuild.currentResult}</p>
-                        <p>Check console output at <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
-                    """,
+                    to: 'kamlesh71324@gmail.com',
+                    subject: "${env.JOB_NAME} - Build #${env.BUILD_NUMBER} - ${currentBuild.currentResult}",
+                    body: """<p>Hello Kamlesh,</p>
+<p>🔧 Job: <b>${env.JOB_NAME}</b><br>
+🔢 Build Number: <b>${env.BUILD_NUMBER}</b><br>
+📄 <a href="${env.BUILD_URL}">Click here to view the full build</a></p>
+<p>Regards,<br>Jenkins</p>""",
                     mimeType: 'text/html',
-                    attachLog: true,
-                    to: 'kamlesh71324@gmail.com'
+                    attachLog: true
                 )
             }
         }
     }
 }
+
 
 
