@@ -23,41 +23,48 @@ pipeline {
 
     post {
         success {
-            echo "✅ About to send success email using mail step"
-            mail to: 'kamlesh71324@gmail.com',
-                 subject: "${env.JOB_NAME} - Build #${env.BUILD_NUMBER} - SUCCESS",
-                 body: """Hello Kamlesh,
+            emailext (
+                to: 'kamlesh71324@gmail.com',
+                subject: "${env.JOB_NAME} - Build #${env.BUILD_NUMBER} - SUCCESS ✅",
+                body: """
+Hello Kamlesh,
 
 ✅ Your Jenkins build completed successfully.
 
-🔧 Job: ${env.JOB_NAME}
-🔢 Build Number: ${env.BUILD_NUMBER}
-📄 View the full build log: ${env.BUILD_URL}
+🔧 Job: ${env.JOB_NAME}  
+🔢 Build Number: ${env.BUILD_NUMBER}  
+📄 Build URL: ${env.BUILD_URL}
+
+The full build log is attached for your reference.
 
 Regards,  
 Jenkins
-"""
+""",
+                attachLog: true
+            )
         }
 
         failure {
-            echo "❌ About to send failure email using mail step"
-            mail to: 'kamlesh71324@gmail.com',
-                 subject: "${env.JOB_NAME} - Build #${env.BUILD_NUMBER} - FAILURE",
-                 body: """Hello Kamlesh,
+            emailext (
+                to: 'kamlesh71324@gmail.com',
+                subject: "${env.JOB_NAME} - Build #${env.BUILD_NUMBER} - FAILURE ❌",
+                body: """
+Hello Kamlesh,
 
 ❌ Your Jenkins build has failed.
 
-🔧 Job: ${env.JOB_NAME}
-🔢 Build Number: ${env.BUILD_NUMBER}
-📄 View the full build log: ${env.BUILD_URL}
+🔧 Job: ${env.JOB_NAME}  
+🔢 Build Number: ${env.BUILD_NUMBER}  
+📄 Build URL: ${env.BUILD_URL}
 
-Please review and fix the issue.
+Please review the attached build log and resolve any issues.
 
 Regards,  
 Jenkins
-"""
+""",
+                attachLog: true
+            )
         }
     }
 }
-
 
